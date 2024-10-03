@@ -26,8 +26,30 @@ app.get("/orders", async (req: Request, res: Response): Promise<void> => {
 });
 
 const registerService = async (encodedAuthString: string): Promise<void> => {
+  console.log("Attempting to register service with gateway!");
 
-}
+  try {
+    const response = await axios({
+      method: "POST",
+      url: "http://api-gateway:3000/register",
+      headers: {
+        authorization: `Basic ${encodedAuthString}`,
+        "Content-Type": "application/json",
+      },
+      data: {
+        apiName: "order-service",
+        protocol: "http",
+        host: HOST,
+        port: PORT,
+        connections: 0,
+        weight: 1,
+        healthCheckPaths: ["/orders"],
+      },
+    });
+
+    console.log("Order service registered successfully!", response.data);
+  } catch (error) {}
+};
 
 app.listen(PORT, () => {
   const authString = "surajdarade:surajdarade";
