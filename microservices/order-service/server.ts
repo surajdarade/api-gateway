@@ -25,6 +25,10 @@ app.get("/orders", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+const registerService = async (encodedAuthString: string): Promise<void> => {
+
+}
+
 app.listen(PORT, () => {
   const authString = "surajdarade:surajdarade";
   const encodedAuthString = Buffer.from(authString, "utf-8").toString("base64");
