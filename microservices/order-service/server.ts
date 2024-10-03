@@ -48,7 +48,15 @@ const registerService = async (encodedAuthString: string): Promise<void> => {
     });
 
     console.log("Order service registered successfully!", response.data);
-  } catch (error) {}
+  } catch (err: any) {
+    console.error("Error during service registration:", err.message);
+    if (axios.isAxiosError(err) && err.response) {
+      console.error("Response data:", err.response.data);
+      console.error("Response status:", err.response.status);
+      console.error("Response headers:", err.response.headers);
+    }
+    setTimeout(() => registerService(encodedAuthString), 5000);
+  }
 };
 
 app.listen(PORT, () => {
