@@ -65,3 +65,44 @@ app.listen(PORT, () => {
   console.log(`Encoding authstring: ${encodedAuthString}`);
   console.log(`Order service running on port ${PORT}`);
 });
+
+process.on("SIGINT", async () => {
+  console.log("Received SIGINT. Unregistering Service...");
+  await unregisterService();
+  process.exit();
+});
+
+const unregisterService = async (): Promise<void> => {
+  const authString = "surajdarade:surajdarade";
+  const encodedAuthString = Buffer.from(authString, "utf-8").toString("base64");
+
+  console.log("Attempting to unregister service from the gateway");
+
+  try {
+    const response = await axios({
+      method: "POST",
+      url: "http://localhost:3000/unregister",
+      headers: {
+        authorization: `Basic ${encodedAuthString}`,
+        "Content-Type": "application/json",
+      },
+      data: {
+        apiName: "order-service",
+        protocol: "http",
+        host: HOST,
+        port: PORT,
+        connections: 0,
+        weight: 1,
+        heightCheckPaths: ["/orders"],
+      },
+    });
+    console.log("Service Unregistered Successfully: ", response.data);
+  } catch (error: any) {
+    console.error("Error during service unregistration: ", error.message);
+    if (axios.isAxiosError(error) && error.message) {
+      console.error("Response data: ", error?.response?.data);
+      console.error("Response status: ", error?.response?.status);
+      console.error("Response headers: ", error?.response?.headers);
+    }
+  }
+};
