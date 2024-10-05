@@ -1,4 +1,4 @@
-# api-gateway
+# API-GATEWAY
 
 Node + Express + Typescript
 
