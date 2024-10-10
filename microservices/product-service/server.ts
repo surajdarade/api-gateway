@@ -24,7 +24,7 @@ app.get("/products", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-async function registerService(encodedAuthString: string): Promise<void> {
+const registerService = async (encodedAuthString: string): Promise<void> => {
   console.log("Attempting to register service with the gateway...");
   try {
     const response = await axios({
