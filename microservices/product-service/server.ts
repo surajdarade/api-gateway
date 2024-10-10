@@ -24,7 +24,15 @@ app.get("/products", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-async function registerService(encodedAuthString: string): Promise<void> {
+app.listen(PORT, () => {
+  const authString = "surajdarade:surajdarade";
+  const encodedAuthString = Buffer.from(authString, "utf-8").toString("base64");
+  console.log(`Encoding authstring: ${encodedAuthString}`);
+  console.log(`Product service running on port ${PORT}`);
+  registerService(encodedAuthString);
+});
+
+const registerService = (encodedAuthString: string): Promise<void> => {
   console.log("Attempting to register service with the gateway...");
   try {
     const response = await axios({
@@ -55,11 +63,3 @@ async function registerService(encodedAuthString: string): Promise<void> {
     setTimeout(() => registerService(encodedAuthString), 5000);
   }
 }
-
-app.listen(PORT, () => {
-  const authString = "johndoe:password";
-  const encodedAuthString = Buffer.from(authString, "utf-8").toString("base64");
-  console.log(`Encoding authstring: ${encodedAuthString}`);
-  console.log(`Product service running on port ${PORT}`);
-  registerService(encodedAuthString);
-});
