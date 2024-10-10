@@ -62,4 +62,44 @@ const registerService = async (encodedAuthString: string): Promise<void> => {
     }
     setTimeout(() => registerService(encodedAuthString), 5000);
   }
-}
+};
+
+process.on("SIGINT", async () => {
+  console.log("Received SIGINT. Unregistering service...");
+  await unregisterService();
+  process.exit();
+});
+
+const unregisterService = async (): Promise<void> => {
+  const authString = "johndoe:password";
+  const encodedAuthString = Buffer.from(authString, "utf-8").toString("base64");
+
+  console.log("Attempting to unregister service from the gateway...");
+  try {
+    const response = await axios({
+      method: "POST",
+      url: "http://api-gateway:3000/unregister",
+      headers: {
+        authorization: `Basic ${encodedAuthString}`,
+        "Content-Type": "application/json",
+      },
+      data: {
+        apiName: "product-service",
+        protocol: "http",
+        host: HOST,
+        port: PORT,
+        connections: 0,
+        weight: 1,
+        healthCheckPaths: ["/products"],
+      },
+    });
+    console.log("Service unregistered successfully:", response.data);
+  } catch (err: any) {
+    console.error("Error during service unregistration:", err.message);
+    if (err.response) {
+      console.error("Response data:", err.response.data);
+      console.error("Response status:", err.response.status);
+      console.error("Response headers:", err.response.headers);
+    }
+  }
+};
