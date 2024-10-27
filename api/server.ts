@@ -21,7 +21,7 @@ app.post("/bogusapi", (req: Request, res: Response, next: NextFunction) => {
 let server: Server;
 
 app.listen(PORT, () => {
-  const authString = "johndoe:password";
+  const authString = "surajdarade:surajdarade";
   const encodedAuthString = Buffer.from(authString, "utf-8").toString("base64");
   console.log(`Encoding authstring: ${encodedAuthString}`);
   console.log("Fake API server started on port " + PORT);
