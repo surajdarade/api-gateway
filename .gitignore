@@ -2,3 +2,4 @@ node_modules
 
 microservices/order-service/node_modules
 microservices/product-service/node_modules
+api/node_modules
