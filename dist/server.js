@@ -13,6 +13,9 @@ const PORT = 3000;
 app.use(express_1.default.json());
 app.use((0, helmet_1.default)());
 app.use((0, morgan_1.default)("combined"));
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
 app.use(auth_1.default);
 app.use(rateLimiter_1.default);
 app.listen(PORT, () => {

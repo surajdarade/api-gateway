@@ -11,6 +11,10 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan("combined"));
 
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.use(auth);
 app.use(rateLimiter);
 
